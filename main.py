@@ -20,7 +20,15 @@ OUTPUT_PATH = "/output/entry.txt"
 
 
 def main() -> None:
-    """Write the review to /output/entry.txt, with no trailing newline."""
+    """Write the review to /output/entry.txt, with no trailing newline.
+
+    The gate refuses anything outside 1-200 characters, so check the
+    review against it here first instead of shipping an invalid line.
+    """
+    if not 1 <= len(REVIEW) <= 200:
+        raise ValueError(f"review is {len(REVIEW)} characters, must be 1-200")
+    if "\n" in REVIEW or "\r" in REVIEW:
+        raise ValueError("review must be a single line")
     os.makedirs(os.path.dirname(OUTPUT_PATH), exist_ok=True)
     with open(OUTPUT_PATH, "w", encoding="utf-8", newline="") as handle:
         handle.write(REVIEW)
